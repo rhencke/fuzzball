@@ -1,0 +1,174 @@
+
+!IF "$(OS)" == "Windows_NT"
+NULL=
+!ELSE 
+NULL=nul
+!ENDIF 
+
+WINDIR=.\win32
+SRCDIR=.\src
+INCDIR=.\include
+OUTDIR=.\game
+INTDIR=.\compile
+OPENSSLDIR=e:\cyg\openssl
+
+CPP=cl.exe
+CPP_OPS=/nologo /EHsc /MT /W3 /O2 /c /D "_X86_" /D "_WIN32_" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "FD_SETSIZE=4096" /D "_WINSOCK_DEPRECATED_NO_WARNINGS" /D "_CRT_SECURE_NO_WARNINGS" /D "_CRT_NONSTDC_NO_WARNINGS" /D "_CRT_SECURE_NO_DEPRECATE" /D "POSIX" /I"$(WINDIR)" /I"$(INCDIR)" /I"$(OPENSSLDIR)\include" /Fd"$(INTDIR)\\"
+LINK32=link.exe
+LINK32_OPS=/NODEFAULTLIB:libc /LIBPATH:".\win32" /LIBPATH:"$(OPENSSLDIR)\lib\vc" pcre.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib libeay32MD.lib ssleay32MD.lib winmm.lib /nologo /subsystem:console /incremental:no /machine:I386
+
+# Enable These for debugging
+#CPP_OPS=/Od /D "_DEBUG" /Zi /EHsc /nologo /MTd /W3 /D "_X86_" /D "_WIN32_" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "FD_SETSIZE=4096" /D "_CRT_SECURE_NO_WARNINGS" /D "_CRT_NONSTDC_NO_WARNINGS" /D "_CRT_SECURE_NO_DEPRECATE" /D "POSIX" /I"$(INCDIR)" /I"$(OPENSSLDIR)\include" /Fd"$(INTDIR)\\" /c
+#LINK32_OPS=/DEBUG /NODEFAULTLIB:libc /LIBPATH:".\win32" /LIBPATH:"$(OPENSSLDIR)\lib\vc" pcre.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib libeay32MD.lib ssleay32MD.lib winmm.lib /nologo /subsystem:console /incremental:no /machine:I386
+
+
+ALL : "$(OUTDIR)\fbmuck.exe" "$(OUTDIR)\restart.exe" "$(OUTDIR)\fbhelp.exe"
+
+CLEAN :
+	-@erase "$(INTDIR)\*.obj"
+	-@erase "$(INTDIR)\*.idb"
+	-@erase "$(INTDIR)\*.exe"
+     -@erase "$(SRCDIR)\mkversion.exe"
+     -@erase "$(OUTDIR)\restart.exe"
+     -@erase "$(OUTDIR)\fbhelp.exe"
+     -@erase "$(OUTDIR)\fbmuck.exe"
+
+# Object files
+MKVERSION_OBJ="$(INTDIR)\mkversion.obj"\
+      "$(INTDIR)\sha1.obj"
+
+RESTART_OBJ="$(INTDIR)\restart.obj"
+
+MALLOC_OBJ="$(INTDIR)\crt_malloc.obj"
+
+BASE_OBJ="$(INTDIR)\array.obj" \
+	"$(INTDIR)\boolexp.obj" \
+	"$(INTDIR)\compile.obj" \
+	"$(INTDIR)\create.obj" \
+	"$(INTDIR)\db_header.obj" \
+	"$(INTDIR)\db.obj" \
+	"$(INTDIR)\debugger.obj" \
+	"$(INTDIR)\disassem.obj" \
+	"$(INTDIR)\diskprop.obj" \
+	"$(INTDIR)\edit.obj" \
+	"$(INTDIR)\events.obj" \
+	"$(INTDIR)\game.obj" \
+	"$(INTDIR)\hashtab.obj" \
+	"$(INTDIR)\help.obj" \
+	"$(INTDIR)\inst.obj" \
+	"$(INTDIR)\interp.obj" \
+	"$(INTDIR)\log.obj" \
+	"$(INTDIR)\look.obj" \
+	"$(INTDIR)\match.obj" \
+	"$(INTDIR)\mcp.obj" \
+	"$(INTDIR)\mcpgui.obj" \
+	"$(INTDIR)\mcppkgs.obj" \
+	"$(INTDIR)\mfuns2.obj" \
+	"$(INTDIR)\mfuns.obj" \
+	"$(INTDIR)\move.obj" \
+	"$(INTDIR)\msgparse.obj" \
+	"$(INTDIR)\mufevent.obj" \
+	"$(INTDIR)\p_array.obj" \
+	"$(INTDIR)\p_connects.obj" \
+	"$(INTDIR)\p_db.obj" \
+	"$(INTDIR)\p_error.obj" \
+	"$(INTDIR)\p_float.obj" \
+	"$(INTDIR)\player.obj" \
+	"$(INTDIR)\p_math.obj" \
+	"$(INTDIR)\p_mcp.obj" \
+	"$(INTDIR)\p_misc.obj" \
+	"$(INTDIR)\p_props.obj" \
+	"$(INTDIR)\p_regex.obj" \
+	"$(INTDIR)\predicates.obj" \
+	"$(INTDIR)\propdirs.obj" \
+	"$(INTDIR)\property.obj" \
+	"$(INTDIR)\props.obj" \
+	"$(INTDIR)\p_stack.obj" \
+	"$(INTDIR)\p_strings.obj" \
+	"$(INTDIR)\random.obj" \
+	"$(INTDIR)\rob.obj" \
+	"$(INTDIR)\sanity.obj" \
+	"$(INTDIR)\set.obj" \
+	"$(INTDIR)\signal.obj" \
+	"$(INTDIR)\smatch.obj" \
+	"$(INTDIR)\snprintf.obj" \
+	"$(INTDIR)\speech.obj" \
+	"$(INTDIR)\strftime.obj" \
+	"$(INTDIR)\stringutil.obj" \
+	"$(INTDIR)\timequeue.obj" \
+	"$(INTDIR)\timestamp.obj" \
+	"$(INTDIR)\tune.obj" \
+	"$(INTDIR)\unparse.obj" \
+	"$(INTDIR)\utils.obj" \
+	"$(INTDIR)\wiz.obj" \
+	"$(INTDIR)\win32.obj"
+
+INTERFACE_OBJ="$(INTDIR)\interface.obj"
+
+VERSION_OBJ="$(INTDIR)\version.obj"
+
+RESOLVER_OBJ="$(INTDIR)\resolver.obj"
+
+# Directories
+"$(OUTDIR)" :
+    if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
+
+"$(INTDIR)" :
+    if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
+
+# Generic src/.c to compile/.obj
+{$(SRCDIR)}.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_OPS) /Fo"$(INTDIR)\\" $<
+<<
+
+# Generic win32/.cpp to compile/.obj
+{$(WINDIR)}.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_OPS) /Fo"$(INTDIR)\\" $<
+<<
+
+# Generic win32/.c to compile/.obj
+{$(WINDIR)}.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_OPS) /Fo"$(INTDIR)\\" $<
+<<
+
+# Standalone fbhelp
+"$(INTDIR)\fbhelp.obj" : "$(INTDIR)" "$(SRCDIR)\help.c"
+   $(CPP) $(CPP_OPS) /D "STANDALONE_HELP" /Fo$(INTDIR)\fbhelp.obj $(SRCDIR)\help.c
+
+"$(OUTDIR)\fbhelp.exe" : "$(OUTDIR)" "$(INTDIR)\fbhelp.obj" $(MALLOC_OBJ)
+    $(LINK32) @<<
+  $(LINK32_OPS)  /out:"$(OUTDIR)\fbhelp.exe" "$(INTDIR)\fbhelp.obj" $(MALLOC_OBJ)
+<<
+
+# how to build version.c
+"$(SRCDIR)\version.c" : "$(SRCDIR)\mkversion.exe" "$(SRCDIR)\version.tpl" $(BASE_OBJ) $(INTERFACE_OBJ) $(MALLOC_OBJ)
+   cd $(SRCDIR)
+   mkversion
+   cd ..
+
+# mkversion for building version.c
+"$(SRCDIR)\mkversion.exe" : "$(INTDIR)" $(MKVERSION_OBJ)
+  $(LINK32) @<<
+    $(LINK32_OPS) /out:"$(SRCDIR)\mkversion.exe" $(MKVERSION_OBJ)
+<<
+
+# fbmuck main executable
+"$(OUTDIR)\fbmuck.exe" : "$(OUTDIR)" "$(INTDIR)" $(VERSION_OBJ) $(BASE_OBJ) $(MALLOC_OBJ) $(INTERFACE_OBJ)
+  $(LINK32) @<<
+    $(LINK32_OPS) /out:"$(OUTDIR)\fbmuck.exe" $(BASE_OBJ) $(MALLOC_OBJ) $(INTERFACE_OBJ) $(VERSION_OBJ)
+<<
+
+# restart program
+"$(OUTDIR)\fb-resolver.exe" : "$(OUTDIR)" "$(INTDIR)" $(RESOLVER_OBJ)
+    $(LINK32) @<<
+  $(LINK32_OPS)  /out:"$(OUTDIR)\fb-resolver.exe" $(RESOLVER_OBJ) $(MALLOC_OBJ)
+<<
+
+# restart program
+"$(OUTDIR)\restart.exe" : "$(OUTDIR)" "$(INTDIR)" $(RESTART_OBJ)
+    $(LINK32) @<<
+  $(LINK32_OPS)  /out:"$(OUTDIR)\restart.exe" $(RESTART_OBJ)
+<<
